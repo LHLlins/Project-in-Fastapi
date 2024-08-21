@@ -2,21 +2,19 @@ from http import HTTPStatus
 
 from fastapi import FastAPI
 
-from schemas import MessageSchemas, UserDBSchemas, UserSchemas, UserPublicSchemas
+from routers import auth, todos, users
+from schemas import MessageSchemas
 
 app = FastAPI()
 
 
-database = []
+app.include_router(users.router)
+
+app.include_router(auth.router)
+
+app.include_router(todos.router)
 
 
-@app.get("/", status_code=HTTPStatus.OK, response_model=MessageSchemas)
+@app.get('/', status_code=HTTPStatus.OK, response_model=MessageSchemas)
 def index():
-    return {"message": "Hello World"}
-
-
-@app.post("/users/", status_code=HTTPStatus.CREATED, response_model=UserPublicSchemas)
-def create_user(user: UserSchemas):
-    user_with_id = UserDBSchemas(id=len(database) + 1, **user.model_dump())
-    database.append(user_with_id)
-    return user_with_id
+    return {'message': 'Hello World'}
