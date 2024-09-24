@@ -1,17 +1,28 @@
-from fastapi import FastAPI
+from fastapi import FastAPI 
+
+from fast_zero.schemas import Message, UserDB, UserPublic, UserSchema
 
 app = FastAPI()
 
-@app.get("/status")
-def status():
-    return {"message": "Server is running"}
 
 @app.get("/")
 def read_root():
 
+
+
     return {"message": "hello World"}
 
+# código omitido
 
+database = []  
 
+# código omitido
 
+@app.post('/users/', status_code=HTTPStatus.CREATED, response_model=UserPublic)
+def create_user(user: UserSchema):
+    user_with_id = UserDB(**user.model_dump(), id=len(database) + 1)  
+
+    database.append(user_with_id)
+
+    return user_with_id
 
